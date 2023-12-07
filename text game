@@ -1,0 +1,45 @@
+import time
+print(
+"""
++================================+
+| Welcome to my game, muggle!    |
+| Enter an integer number        |
+| and guess what number I've     |
+| picked for you between 1 - 1000|
+| But WHATEVER you do, don't pick|
+| 1001. TERRIBLE THINGS HAPPEN...|
+|                                |
+| So, what is the secret number? |
++================================+
+""")
+
+secret_number = int(input("My secret number is: "))
+
+sectret_number = 777
+while secret_number != 777 and secret_number != 1001:
+    time.sleep(1)
+    print("\nHa ha! You're stuck in my loop!")
+    if secret_number < 777:
+         print("\nToo low!")
+    if secret_number > 777 and secret_number <= 1000:
+         print("\nToo high!")
+    if secret_number >= 680 and secret_number <= 800:
+         print("Getting warmer!")
+    secret_number = int(input("\nMy secret number is: "))
+     
+if secret_number == 777:
+    time.sleep(1)
+    print("Well done, muggle! You are free now.")
+if secret_number == 1001:
+    time.sleep(2)
+    print("\nYou vanquish the mage!")
+    time.sleep(2)
+    print(".")
+    time.sleep(1)
+    print(".")
+    time.sleep(1)
+    print(".")
+    time.sleep(1)
+    print("Now roll for initiative")
+
+
