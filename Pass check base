@@ -1,0 +1,42 @@
+import tkinter as tk
+
+def is_dictionary_word(word, dictionary):
+    return word.lower() in dictionary
+
+def strength(previous_password=None):
+    while True:
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+
+        if not username or not password:
+            print("Username and password cannot be empty. Please try again.\n")
+            continue
+
+        if previous_password and password == previous_password:
+            print("New password must be different from the previous one. Please choose a different password.\n")
+            continue
+
+        special_characters = "!@#$%^&*()_-+=<>?/[]{}|"
+        common_words_dictionary = ["password", "123456", "qwerty", "letmein", "admin", "test"]  # Need to tie this to seclist.txt
+
+        if len(password) < 9:
+            print("Password is too short, must be 9 characters or more!\n")
+        elif sum(1 for char in password if char.isupper()) < 2:
+            print("You must have at least 2 capital letters in the password\n")
+        elif sum(1 for char in password if char.islower()) < 2:
+            print("You must have at least 2 lowercase letters in the password\n")
+        elif sum(1 for char in password if char.isdigit()) < 2:
+            print("You need at least 2 numbers in the password\n")
+        elif sum(1 for char in password if char in special_characters) < 2:
+            print("You need at least 2 special characters in the password\n")
+        elif any(is_dictionary_word(word, common_words_dictionary) for word in password.split()):
+            print("Password contains a dictionary word, choose a different one\n")
+        else:
+            print("Password is strong!")
+
+            user_credentials = {username: password}
+
+            print(f"Username '{username}' and password are stored.") #SQL?
+            break
+
+strength()
