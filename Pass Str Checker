@@ -1,0 +1,125 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def is_dictionary_word(word, dictionary):
+    return word.lower() in dictionary
+
+def toggle_password_visibility():
+    if show_password_var.get():
+        password_entry.config(show="")
+    else:
+        password_entry.config(show="*")
+
+def on_yes_clicked():
+    username = username_entry.get()
+    password = password_entry.get()
+
+def check_strength():
+    username = username_entry.get()
+    password = password_entry.get()
+
+    if not username or not password:
+        root.after(1, lambda: messagebox.showwarning("Warning", "Please enter both username and password."))
+        return
+
+    if previous_password and password == previous_password:
+        root.after(1, lambda: messagebox.showwarning("Warning", "Please choose a different password than the previous one."))
+        return
+
+    special_characters = "!@#$%^&*()_-+=<>?/[]{}|"
+    common_words_dictionary = ["password", "123456", "qwerty", "letmein", "admin", "test"]
+
+    if len(password) < 9:
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Password should be at least 9 characters long."))
+        return
+    elif sum(1 for char in password if char.isupper()) < 2:
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Password should have at least 2 uppercase characters."))
+        return
+    elif sum(1 for char in password if char.islower()) < 2:
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Password should have at least 2 lowercase characters."))
+        return
+    elif sum(1 for char in password if char.isdigit()) < 2:
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Password should have at least 2 digits."))
+        return
+    elif sum(1 for char in password if char in special_characters) < 2:
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Password should have at least 2 special characters."))
+        return
+    elif any(is_dictionary_word(word, common_words_dictionary) for word in password.split()):
+        root.after(1, lambda: messagebox.showwarning("Weak Password", "Avoid using common words as part of your password."))
+        return
+
+    root.after(1, lambda: messagebox.showinfo("Good Password", "Password is updated."))
+    
+    # Store user data in a text file
+    with open('user_data.txt', 'a') as file:
+        file.write(f'Username: {username}\n')
+        file.write(f'Password: {password}\n\n')
+
+def on_no_clicked():
+    username = username_entry.get()
+    
+    # Store user data with a placeholder in a text file
+    with open('user_data.txt', 'a') as file:
+        file.write(f'Username: {username}\n')
+        file.write(f'Password: blank\n\n')
+
+
+
+# Create main window
+root = tk.Tk()
+root.title("Password Strength Checker")
+
+# Set row and column weights
+root.columnconfigure(0, weight=1)
+root.columnconfigure(1, weight=1)
+root.columnconfigure(2, weight=1)
+
+root.rowconfigure(0, weight=1)
+root.rowconfigure(1, weight=1)
+root.rowconfigure(2, weight=1)
+root.rowconfigure(3, weight=1)
+root.rowconfigure(4, weight=1)
+root.rowconfigure(5, weight=1)
+root.rowconfigure(6, weight=1)
+
+# Username entry
+username_label = tk.Label(root, text="Enter your username:")
+username_label.grid(row=0, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+username_entry = tk.Entry(root)
+username_entry.grid(row=1, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+# Password entry
+password_label = tk.Label(root, text="Enter your password:")
+password_label.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+password_entry = tk.Entry(root, show="*")
+password_entry.grid(row=3, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+# Show password checkbox
+show_password_var = tk.BooleanVar()
+show_password_checkbox = tk.Checkbutton(root, text="Show Password", variable=show_password_var, command=toggle_password_visibility)
+show_password_checkbox.grid(row=4, column=0, columnspan=3, padx=5, pady=5, sticky="nsew")
+
+# Yes and No buttons
+button_frame = tk.Frame(root)
+button_frame.grid(row=5, column=0, columnspan=3, pady=10, sticky="nsew")
+
+yes_button = tk.Button(button_frame, text="Yes", command=on_yes_clicked)
+yes_button.grid(row=0, column=0, padx=5, sticky="nsew")
+
+no_button = tk.Button(button_frame, text="No", command=on_no_clicked)
+no_button.grid(row=0, column=1, padx=5, sticky="nsew")
+
+# Center the buttons horizontally
+button_frame.grid_columnconfigure(0, weight=1)
+button_frame.grid_columnconfigure(1, weight=1)
+
+# Center the "Show Password" checkbox horizontally
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_columnconfigure(2, weight=1)
+
+# Stretch the button frame horizontally
+root.grid_rowconfigure(5, weight=1)
+
+# Run the GUI
+root.mainloop()
